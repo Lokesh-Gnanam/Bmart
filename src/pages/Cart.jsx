@@ -1,9 +1,12 @@
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart } from "../redux/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
 
   if (cart.length === 0) {
     return <p className="p-6">Your cart is empty 🛒</p>;
@@ -26,7 +29,15 @@ function Cart() {
           >
             Remove
           </button>
+          <button
+            onClick={() => navigate("/checkout")}
+            className="mt-4 bg-black text-white px-4 py-2 rounded"
+          >
+            Go to Checkout
+          </button>
+
         </div>
+        
       ))}
     </div>
   );
