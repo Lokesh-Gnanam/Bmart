@@ -1,21 +1,24 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
-import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert("Registration successful 🎉");
-      navigate("/");
-    } catch (err) {
-      alert(err.message);
+      const userCred = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("USER CREATED:", userCred.user);
+      alert("User created successfully ✅");
+    } catch (error) {
+      console.log(error.code);
+      alert(error.code);
     }
   };
 
@@ -37,7 +40,7 @@ function Register() {
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Password (min 6 chars)"
           className="border p-2 w-full"
           onChange={(e) => setPassword(e.target.value)}
           required
