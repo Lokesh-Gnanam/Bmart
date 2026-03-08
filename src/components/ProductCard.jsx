@@ -1,68 +1,46 @@
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
-import { ShoppingBag, Star } from "lucide-react";
+import { Star } from "lucide-react";
 
 function ProductCard({ product }) {
   const dispatch = useDispatch();
 
+  const handleAddToCart = () => {
+    dispatch(addToCart({ ...product, quantity: 1 }));
+  };
+
   return (
-    <div className="group relative bg-white dark:bg-gray-800 rounded-2xl p-4 card-hover border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <div className="bg-white rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col group p-3">
       {/* Product Image */}
-      <div className="relative h-48 mb-4 rounded-xl overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800">
-        <img 
-          src={product.image || `https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop`}
+      <div className="relative aspect-square overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center p-4">
+        <img
+          src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="object-contain w-full h-full group-hover:scale-105 transition-transform duration-300 mix-blend-multiply"
         />
-        {product.discount && (
-          <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
-            -{product.discount}%
-          </div>
-        )}
-        <button className="absolute top-3 right-3 p-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-          <Star className="h-4 w-4" />
-        </button>
       </div>
 
-      {/* Product Info */}
-      <div className="space-y-2">
-        <h3 className="font-medium text-gray-800 dark:text-gray-200 line-clamp-1">
-          {product.name}
-        </h3>
+      {/* Product Details */}
+      <div className="flex flex-col flex-grow px-1">
+        <h3 className="font-bold text-gray-900 text-[15px] mb-1 truncate">{product.name}</h3>
+        <p className="text-xs text-gray-500 mb-2 truncate">{product.subtitle}</p>
         
-        <div className="flex items-center space-x-1">
+        {/* Rating Stars */}
+        <div className="flex items-center space-x-0.5 mb-4">
           {[...Array(5)].map((_, i) => (
-            <Star key={i} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+            <Star key={i} className={`w-3.5 h-3.5 ${i < Math.floor(product.rating) ? 'fill-green-500 text-green-500' : 'fill-gray-200 text-gray-200'}`} />
           ))}
-          <span className="text-sm text-gray-500">({product.rating || 4.5})</span>
         </div>
 
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-xl font-bold text-gray-900 dark:text-white">
-              ₹{product.price.toLocaleString()}
-            </p>
-            {product.originalPrice && (
-              <p className="text-sm text-gray-500 line-through">
-                ₹{product.originalPrice.toLocaleString()}
-              </p>
-            )}
-          </div>
-
+        {/* Add to Cart Button */}
+        <div className="mt-auto">
           <button
-            onClick={() => dispatch(addToCart(product))}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-110"
-            aria-label="Add to cart"
+            onClick={handleAddToCart}
+            className="w-full sm:w-auto px-5 py-2 bg-[#00d632] hover:bg-[#00c02d] text-white text-sm font-bold rounded-full transition-colors active:scale-95"
           >
-            <ShoppingBag className="h-5 w-5" />
+            Add to Cart
           </button>
         </div>
-
-        {product.freeDelivery && (
-          <p className="text-sm text-green-600 dark:text-green-400 font-medium">
-            ✓ Free Delivery
-          </p>
-        )}
       </div>
     </div>
   );

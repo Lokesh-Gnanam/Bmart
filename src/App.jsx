@@ -12,7 +12,7 @@ import Footer from "./components/Footer";
 
 function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+    <div className="min-h-screen bg-light text-gray-800 font-sans">
       <Navbar />
       <main className="pt-20 pb-16">
         <Routes>
