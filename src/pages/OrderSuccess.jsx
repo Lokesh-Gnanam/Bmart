@@ -1,84 +1,59 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle, Package, Home, ShoppingBag } from "lucide-react";
+import { Check } from "lucide-react";
 
 function OrderSuccess() {
   const navigate = useNavigate();
-  const orderId = `ORDER-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+  const orderId = `8984294820`; // Matches the image roughly
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl text-center">
-        {/* Success Animation */}
-        <div className="relative mb-8">
-          <div className="w-32 h-32 mx-auto bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 rounded-full flex items-center justify-center">
-            <CheckCircle className="h-16 w-16 text-green-600 dark:text-green-400" />
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-200/50">
+      
+      {/* Main Card */}
+      <div className="bg-white rounded-[40px] p-10 md:p-14 w-full max-w-lg text-center shadow-2xl relative overflow-hidden">
+        
+        {/* Animated Background Blobs for Confetti/Party effect */}
+        <div className="absolute top-0 left-0 w-full h-64 overflow-hidden pointer-events-none">
+           <div className="absolute -top-10 -left-10 w-48 h-48 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+           <div className="absolute top-10 flex w-full justify-center">
+              <div className="w-40 h-40 bg-green-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+           </div>
+           <div className="absolute top-0 -right-10 w-48 h-48 bg-teal-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+        </div>
+
+        {/* Checkmark Icon */}
+        <div className="relative z-10 mx-auto w-32 h-32 mb-8 mt-4 flex items-center justify-center">
+          <div className="absolute inset-0 bg-green-100 rounded-full animate-pulse opacity-50"></div>
+          <div className="absolute inset-2 bg-gradient-to-tr from-green-400 to-[#00d632] rounded-full shadow-lg shadow-green-300/50 flex items-center justify-center transform hover:scale-105 transition-transform">
+            <Check className="h-12 w-12 text-white stroke-[3px]" />
           </div>
-          <div className="absolute inset-0 animate-ping opacity-20">
-            <div className="w-32 h-32 mx-auto bg-green-500 rounded-full"></div>
-          </div>
+          {/* Decorative small circles simulating confetti */}
+          <div className="absolute top-0 right-4 w-3 h-3 border-2 border-purple-400 rounded-full"></div>
+          <div className="absolute bottom-4 left-0 w-2 h-2 border-2 border-blue-400 rounded-full"></div>
+          <div className="absolute top-4 left-4 w-2 h-2 bg-yellow-400 rounded-full"></div>
+          <div className="absolute bottom-0 right-8 w-2 h-2 bg-red-400 rounded-full"></div>
+          <div className="absolute top-1/2 -right-4 w-3 h-1 bg-orange-400 rounded-full rotate-45"></div>
+          <div className="absolute -top-4 left-1/2 w-4 h-0.5 bg-blue-400 rounded-full -rotate-45"></div>
+          <div className="absolute -bottom-4 left-1/2 w-3 h-1 bg-green-400 rounded-full rotate-12"></div>
         </div>
 
         {/* Success Message */}
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          Order Confirmed! 🎉
+        <h1 className="text-3xl font-bold text-gray-900 mb-3 relative z-10 leading-snug">
+          Your order has been<br />accepted
         </h1>
-        <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
-          Thank you for your purchase. Your order has been successfully placed.
+        
+        <p className="text-gray-500 font-medium mb-10 relative z-10 text-[15px]">
+          Transaction ID: {orderId}
         </p>
 
-        {/* Order Details */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-8 border border-gray-100 dark:border-gray-700">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Package className="h-5 w-5 text-blue-600" />
-            <span className="font-medium text-gray-700 dark:text-gray-300">
-              Order ID: {orderId}
-            </span>
-          </div>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            We've sent a confirmation email with all the details. You can track your order in the Orders section.
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <div className="text-sm text-blue-600 dark:text-blue-400 mb-1">Estimated Delivery</div>
-              <div className="font-bold">3-5 Business Days</div>
-            </div>
-            <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-              <div className="text-sm text-green-600 dark:text-green-400 mb-1">Payment Status</div>
-              <div className="font-bold">Confirmed</div>
-            </div>
-            <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-              <div className="text-sm text-purple-600 dark:text-purple-400 mb-1">Order Status</div>
-              <div className="font-bold">Processing</div>
-            </div>
-          </div>
-        </div>
+        {/* Action Button */}
+        <button
+          onClick={() => navigate("/")}
+          className="relative z-10 w-full sm:w-auto px-10 py-3.5 bg-gradient-to-r from-orange-500 to-[#ff6b00] hover:from-orange-600 hover:to-[#e66000] text-white font-bold rounded-full transition-all duration-300 shadow-md transform hover:-translate-y-0.5"
+        >
+          Continue Shopping
+        </button>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            onClick={() => navigate("/")}
-            className="btn-primary flex items-center justify-center"
-          >
-            <Home className="h-5 w-5 mr-2" />
-            Continue Shopping
-          </button>
-          <button
-            onClick={() => navigate("/orders")}
-            className="btn-secondary flex items-center justify-center"
-          >
-            <ShoppingBag className="h-5 w-5 mr-2" />
-            View Orders
-          </button>
-        </div>
-
-        {/* Support Info */}
-        <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Need help? <a href="#" className="text-blue-600 hover:text-blue-700">Contact Support</a> or call us at 1800-123-4567
-          </p>
-        </div>
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useAuth } from "../context/AuthContext";
-import { Search, ShoppingCart, User, Menu, X } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, X, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { categories } from "../data/categories";
 
 function Navbar() {
   const cartItems = useSelector((state) => state.cart);
@@ -13,7 +14,9 @@ function Navbar() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log("Searching for:", searchQuery);
+    if (searchQuery.trim()) {
+      navigate(`/category?search=${encodeURIComponent(searchQuery)}`);
+    }
   };
 
   return (
@@ -27,10 +30,40 @@ function Navbar() {
 
           {/* Nav Links - Desktop */}
           <div className="hidden md:flex flex-1 justify-center space-x-8 text-sm font-medium text-gray-600">
-            <Link to="/category" className="hover:text-gray-900 transition-colors">Category</Link>
-            <Link to="/deals" className="hover:text-gray-900 transition-colors">Deals</Link>
-            <Link to="/whats-new" className="hover:text-gray-900 transition-colors">What's new</Link>
-            <Link to="/delivery" className="hover:text-gray-900 transition-colors">Delivery</Link>
+            <div className="relative group/category">
+              <button 
+                onClick={() => navigate("/category")}
+                className="flex items-center hover:text-gray-900 transition-colors py-2"
+              >
+                Categories <ChevronDown className="ml-1 h-4 w-4" />
+              </button>
+              
+              {/* Mega Menu for Categories */}
+              <div className="absolute top-full -left-16 w-[600px] bg-white rounded-xl shadow-xl opacity-0 invisible group-hover/category:opacity-100 group-hover/category:visible transition-all duration-300 z-50 p-6 border border-gray-100">
+                <h3 className="font-bold text-gray-900 mb-4 pb-2 border-b">Popular Categories</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {categories.slice(0, 6).map((cat) => (
+                    <div 
+                      key={cat.id} 
+                      onClick={() => navigate(`/category`)}
+                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors border border-transparent hover:border-gray-100"
+                    >
+                      <div className="w-12 h-12 rounded bg-white flex items-center justify-center border border-gray-100 p-1 flex-shrink-0">
+                        <img src={cat.image} alt={cat.name} className="w-full h-full object-contain mix-blend-multiply" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm text-gray-900">{cat.name}</h4>
+                        <p className="text-xs text-gray-500">{cat.itemCount} Item Available</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            <Link to="/deals" className="hover:text-gray-900 transition-colors py-2">Deals</Link>
+            <Link to="/whats-new" className="hover:text-gray-900 transition-colors py-2">What's New</Link>
+            <Link to="/delivery" className="hover:text-gray-900 transition-colors py-2">Delivery</Link>
           </div>
 
           {/* Search Bar - Desktop */}

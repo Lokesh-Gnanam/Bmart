@@ -9,6 +9,11 @@ import Checkout from "./pages/Checkout";
 import Payment from "./pages/Payment";
 import OrderSuccess from "./pages/OrderSuccess";
 import Footer from "./components/Footer";
+import CategoryPage from "./pages/CategoryPage";
+import DealsPage from "./pages/DealsPage";
+import WhatsNewPage from "./pages/WhatsNewPage";
+import DeliveryPage from "./pages/DeliveryPage";
+import ProductDetails from "./pages/ProductDetails";
 
 function App() {
   return (
@@ -19,6 +24,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/category" element={<CategoryPage />} />
+          <Route path="/deals" element={<DealsPage />} />
+          <Route path="/whats-new" element={<WhatsNewPage />} />
+          <Route path="/delivery" element={<DeliveryPage />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
           
           <Route path="/cart" element={
             <ProtectedRoute>
