@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
+import { products as allProducts } from "../data/products";
 
 const categories = [
   { name: "Mobiles", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=150&q=80" },
@@ -10,19 +12,59 @@ const categories = [
   { name: "Gadgets", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=150&q=80" },
 ];
 
-const featuredProducts = [
-  { id: 1, name: "Wireless Earbuds", subtitle: "Organics and make their original", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80", price: 2999, rating: 5 },
-  { id: 2, name: "Boat ProEarbuds", subtitle: "Organics and make their original", image: "https://images.unsplash.com/photo-1572569533612-8588362d57ac?w=500&q=80", price: 1999, rating: 5 },
-  { id: 3, name: "Apple Airpods pro X", subtitle: "Organics and make their original", image: "https://images.unsplash.com/photo-1606220588913-b3a58ce681ce?w=500&q=80", price: 24999, rating: 5 },
-  { id: 4, name: "Nord OnePlus Buds", subtitle: "Organics and make their original", image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&q=80", price: 4999, rating: 5 },
-  { id: 5, name: "Earbuds", subtitle: "Organics and make their original", image: "https://images.unsplash.com/photo-1605464315542-bda3e2f4e605?w=500&q=80", price: 1499, rating: 5 },
-  { id: 6, name: "Boat Neo XEarbuds", subtitle: "Organics and make their original", image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500&q=80", price: 1299, rating: 5 },
-  { id: 7, name: "Apple Airpods X", subtitle: "Organics and make their original", image: "https://images.unsplash.com/photo-1588423771073-b8903f840b49?w=500&q=80", price: 19999, rating: 5 },
-  { id: 8, name: "Nord OnePlus Buds", subtitle: "Organics and make their original", image: "https://images.unsplash.com/photo-1613040809024-b4befdb51261?w=500&q=80", price: 5499, rating: 5 },
-];
-
 function Home() {
-  const [products, setProducts] = useState(featuredProducts);
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search");
+  
+  const [products, setProducts] = useState(allProducts);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [activeFilter, setActiveFilter] = useState("All Filters");
+
+  useEffect(() => {
+    let filtered = [...allProducts];
+    
+    // Search Filter
+    if (searchQuery) {
+      filtered = filtered.filter(p => 
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        p.subtitle?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    // Category Filter
+    if (activeCategory) {
+      // Mapping display names to data categories
+      const categoryMap = {
+        "Mobiles": "smartphone",
+        "Electronics": "electronics",
+        "Food": "food",
+        "Cosmetics": "beauty",
+        "Furnitures": "furniture",
+        "Gadgets": "gadget",
+        "Headphones": "headphone"
+      };
+      const mappedCategory = categoryMap[activeCategory] || activeCategory.toLowerCase();
+      filtered = filtered.filter(p => p.category === mappedCategory || p.category.includes(mappedCategory));
+    }
+    
+    // Sort Filter
+    switch(activeFilter) {
+      case "Price":
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case "Review":
+        filtered.sort((a, b) => b.rating - a.rating);
+        break;
+      case "Type":
+        filtered.sort((a, b) => a.category.localeCompare(b.category));
+        break;
+      default:
+        // All Filters / Color / Headphone Type logic could be complex, keeping default
+        break;
+    }
+    
+    setProducts(filtered);
+  }, [searchQuery, activeCategory, activeFilter]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-light pb-12">
@@ -49,11 +91,15 @@ function Home() {
         <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">Categories</h2>
         <div className="flex flex-wrap justify-center gap-6 md:gap-10">
           {categories.map((category) => (
-            <div key={category.name} className="flex flex-col items-center group cursor-pointer">
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-transparent group-hover:border-gray-300 transition-all p-1 mb-3 bg-white shadow-sm">
+            <div 
+              key={category.name} 
+              className="flex flex-col items-center group cursor-pointer"
+              onClick={() => setActiveCategory(activeCategory === category.name ? null : category.name)}
+            >
+              <div className={`w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 transition-all p-1 mb-3 bg-white shadow-sm ${activeCategory === category.name ? 'border-green-500' : 'border-transparent group-hover:border-gray-300'}`}>
                 <img src={category.image} alt={category.name} className="w-full h-full object-cover rounded-full" />
               </div>
-              <span className="text-sm font-medium text-gray-700">{category.name}</span>
+              <span className={`text-sm font-medium ${activeCategory === category.name ? 'text-green-600 font-bold' : 'text-gray-700'}`}>{category.name}</span>
             </div>
           ))}
         </div>
@@ -72,24 +118,37 @@ function Home() {
       <div className="flex flex-wrap items-center justify-between mb-8 gap-4 px-2">
         <div className="flex flex-wrap gap-3">
           {["Headphone Type", "Price", "Color", "Review", "All Filters"].map((filter) => (
-            <button key={filter} className="px-5 py-2 bg-[#e2e4e4] hover:bg-gray-300 text-gray-700 text-sm font-medium rounded-full transition-colors">
+            <button 
+              key={filter} 
+              onClick={() => setActiveFilter(filter)}
+              className={`px-5 py-2 text-sm font-medium rounded-full transition-colors ${activeFilter === filter ? 'bg-gray-800 text-white' : 'bg-[#e2e4e4] hover:bg-gray-300 text-gray-700'}`}
+            >
               {filter}
             </button>
           ))}
         </div>
         <button className="px-5 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-full transition-colors">
-          Sort By
+          Sort By {activeFilter !== "All Filters" && `: ${activeFilter}`}
         </button>
       </div>
 
       {/* Products Section */}
       <div className="mb-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 px-2">Headphones For You!</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6 px-2">
+          {searchQuery ? `Search Results for "${searchQuery}"` : activeCategory ? `${activeCategory} For You!` : "Products For You!"}
+        </h2>
+        
+        {products.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 text-gray-500 bg-white rounded-2xl border border-gray-100">
+            No products found matching your criteria.
+          </div>
+        )}
       </div>
 
     </div>

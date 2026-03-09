@@ -71,12 +71,12 @@ function Checkout() {
           {steps.map((step, index) => (
             <div key={step.id} className="flex items-center">
               <div className={`flex flex-col items-center ${
-                step.id <= activeStep ? 'text-blue-600' : 'text-gray-400'
+                step.id <= activeStep ? 'text-[#6367FF]' : 'text-gray-400'
               }`}>
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
                   step.id <= activeStep 
-                    ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' 
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-400'
+                    ? 'bg-[#6367FF]/10 text-[#6367FF]' 
+                    : 'bg-[#F3F4F4] text-gray-400'
                 }`}>
                   {step.icon}
                 </div>
@@ -84,7 +84,7 @@ function Checkout() {
               </div>
               {index < steps.length - 1 && (
                 <div className={`w-24 h-0.5 mx-4 ${
-                  step.id < activeStep ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+                  step.id < activeStep ? 'bg-[#6367FF]' : 'bg-[#F3F4F4]'
                 }`} />
               )}
             </div>
@@ -101,7 +101,7 @@ function Checkout() {
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                 Delivery Address
               </h2>
-              <div className="flex items-center text-sm text-blue-600 dark:text-blue-400">
+              <div className="flex items-center text-sm text-[#6367FF]">
                 <Shield className="h-4 w-4 mr-1" />
                 Secure & Private
               </div>
@@ -213,7 +213,7 @@ function Checkout() {
                   name="saveAddress"
                   checked={formData.saveAddress}
                   onChange={handleInputChange}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-gray-300 text-[#6367FF] focus:ring-[#6367FF]"
                 />
                 <label htmlFor="saveAddress" className="ml-2 text-sm text-gray-600 dark:text-gray-400">
                   Save this address for future orders
@@ -228,14 +228,14 @@ function Checkout() {
               Delivery Options
             </h2>
             <div className="space-y-4">
-              <label className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 cursor-pointer">
+              <label className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-[#6367FF] cursor-pointer">
                 <div className="flex items-center">
                   <div className="w-6 h-6 rounded-full border border-gray-300 mr-3 flex items-center justify-center">
-                    <div className="w-3 h-3 rounded-full bg-blue-600 hidden"></div>
+                    <div className="w-3 h-3 rounded-full bg-[#6367FF] hidden"></div>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <Truck className="h-5 w-5 text-blue-600 mr-2" />
+                      <Truck className="h-5 w-5 text-[#6367FF] mr-2" />
                       <span className="font-medium">Standard Delivery</span>
                     </div>
                     <p className="text-sm text-gray-500 mt-1">
@@ -246,14 +246,14 @@ function Checkout() {
                 <span className="font-bold">FREE</span>
               </label>
 
-              <label className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 cursor-pointer">
+              <label className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-[#6367FF] cursor-pointer">
                 <div className="flex items-center">
                   <div className="w-6 h-6 rounded-full border border-gray-300 mr-3 flex items-center justify-center">
-                    <div className="w-3 h-3 rounded-full bg-blue-600 hidden"></div>
+                    <div className="w-3 h-3 rounded-full bg-[#6367FF] hidden"></div>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <Truck className="h-5 w-5 text-green-600 mr-2" />
+                      <Truck className="h-5 w-5 text-[#FFC300] mr-2" />
                       <span className="font-medium">Express Delivery</span>
                     </div>
                     <p className="text-sm text-gray-500 mt-1">
@@ -321,7 +321,7 @@ function Checkout() {
 
             <button
               onClick={handleSubmit}
-              className="w-full btn-primary py-3 mt-6"
+              className="w-full bg-[#6367FF] hover:bg-[#5255d6] text-white py-3 rounded-xl font-bold shadow-lg shadow-[#6367FF]/30 transition-all hover:-translate-y-0.5 mt-6"
             >
               Continue to Payment
             </button>

@@ -71,7 +71,7 @@ function Cart() {
                     </div>
                     <button
                       onClick={() => dispatch(removeFromCart(item.id))}
-                      className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg text-red-500"
+                      className="p-2 hover:bg-[#FFA6A6]/20 rounded-lg text-[#FFA6A6] transition-colors"
                     >
                       <Trash2 className="h-5 w-5" />
                     </button>
@@ -84,11 +84,11 @@ function Cart() {
                           id: item.id,
                           quantity: Math.max(1, (item.quantity || 1) - 1)
                         }))}
-                        className="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
+                        className="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-[#F3F4F4] dark:hover:bg-gray-700 transition-colors"
                       >
                         <Minus className="h-4 w-4" />
                       </button>
-                      <span className="font-medium w-8 text-center">
+                      <span className="font-medium w-8 text-center bg-[#F3F4F4] py-1 rounded">
                         {item.quantity || 1}
                       </span>
                       <button
@@ -96,7 +96,7 @@ function Cart() {
                           id: item.id,
                           quantity: (item.quantity || 1) + 1
                         }))}
-                        className="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
+                        className="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-[#F3F4F4] dark:hover:bg-gray-700 transition-colors"
                       >
                         <Plus className="h-4 w-4" />
                       </button>
@@ -138,7 +138,7 @@ function Cart() {
                 </span>
               </div>
               {deliveryCharge > 0 && totalAmount < 999 && (
-                <div className="text-sm text-green-600 dark:text-green-400">
+                <div className="text-sm text-[#FFC300] dark:text-[#FFC300] font-medium">
                   Add ₹{(999 - totalAmount).toLocaleString()} more for free delivery
                 </div>
               )}
@@ -153,7 +153,7 @@ function Cart() {
 
             <button
               onClick={() => navigate("/checkout")}
-              className="w-full btn-primary py-3 flex items-center justify-center"
+              className="w-full bg-[#6367FF] hover:bg-[#5255d6] text-white py-3 rounded-xl font-bold flex items-center justify-center shadow-lg shadow-[#6367FF]/30 transition-all hover:-translate-y-0.5"
             >
               Proceed to Checkout
               <ArrowRight className="ml-2 h-5 w-5" />

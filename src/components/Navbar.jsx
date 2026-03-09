@@ -1,7 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useAuth } from "../context/AuthContext";
-import { Search, ShoppingCart, User, Menu, X, ChevronDown } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, X, ChevronDown, Heart } from "lucide-react";
 import { useState } from "react";
 import { categories } from "../data/categories";
 
@@ -15,7 +15,9 @@ function Navbar() {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/category?search=${encodeURIComponent(searchQuery)}`);
+      navigate(`/?search=${encodeURIComponent(searchQuery)}`);
+    } else {
+      navigate('/');
     }
   };
 
@@ -29,7 +31,7 @@ function Navbar() {
           </Link>
 
           {/* Nav Links - Desktop */}
-          <div className="hidden md:flex flex-1 justify-center space-x-8 text-sm font-medium text-gray-600">
+          <div className="hidden md:flex flex-1 justify-center space-x-8 text-sm font-medium text-gray-500">
             <div className="relative group/category">
               <button 
                 onClick={() => navigate("/category")}
@@ -61,9 +63,9 @@ function Navbar() {
               </div>
             </div>
             
-            <Link to="/deals" className="hover:text-gray-900 transition-colors py-2">Deals</Link>
-            <Link to="/whats-new" className="hover:text-gray-900 transition-colors py-2">What's New</Link>
-            <Link to="/delivery" className="hover:text-gray-900 transition-colors py-2">Delivery</Link>
+            <NavLink to="/deals" className={({isActive}) => `transition-colors py-2 ${isActive ? 'text-gray-900 font-bold' : 'hover:text-gray-900'}`}>Deals</NavLink>
+            <NavLink to="/whats-new" className={({isActive}) => `transition-colors py-2 ${isActive ? 'text-gray-900 font-bold' : 'hover:text-gray-900'}`}>What's New</NavLink>
+            <NavLink to="/delivery" className={({isActive}) => `transition-colors py-2 ${isActive ? 'text-gray-900 font-bold' : 'hover:text-gray-900'}`}>Delivery</NavLink>
           </div>
 
           {/* Search Bar - Desktop */}
@@ -84,13 +86,19 @@ function Navbar() {
 
           {/* Right Section */}
           <div className="flex items-center space-x-6 ml-6">
+            
+            {/* Wishlist */}
+            <Link to="/" className="flex items-center text-gray-700 hover:text-red-500 transition-colors">
+              <Heart className="h-5 w-5 mr-1 text-gray-600 hover:text-red-500 transition-colors" />
+            </Link>
+
             {/* Cart */}
             <Link to="/cart" className="relative flex items-center text-gray-700 hover:text-gray-900 transition-colors group">
               <ShoppingCart className="h-5 w-5 mr-1.5 text-gray-600 group-hover:text-gray-900" />
               <span className="text-sm font-medium">Cart</span>
               {cartItems.length > 0 && (
                 <span className="absolute -top-2 -right-3 bg-red-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-                  {cartItems.length}
+                  {cartItems.reduce((total, item) => total + (item.quantity || 1), 0)}
                 </span>
               )}
             </Link>

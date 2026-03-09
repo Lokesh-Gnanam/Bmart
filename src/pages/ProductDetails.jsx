@@ -17,14 +17,38 @@ function ProductDetails() {
   const [selectedImage, setSelectedImage] = useState(product.images?.[0] || product.image);
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || "");
   const [isLiked, setIsLiked] = useState(false);
+  const [postalCode, setPostalCode] = useState("");
+  const [showReturnPolicy, setShowReturnPolicy] = useState(false);
 
   const handleAddToCart = () => {
     dispatch(addToCart({ ...product, quantity: 1 }));
   };
 
   const handleUpdateQuantity = (newQuantity) => {
-    if (newQuantity < 1) return;
-    dispatch(updateQuantity({ id: product.id, quantity: newQuantity }));
+    if (newQuantity < 1) {
+      dispatch(updateQuantity({ id: product.id, quantity: 0 })); // Update logic or use remove if needed, assuming updateQuantity handles 0 or Redux has remove
+    } else {
+      dispatch(updateQuantity({ id: product.id, quantity: newQuantity }));
+    }
+  };
+
+  const handleBuyNow = () => {
+    navigate('/payment');
+  };
+
+  const handlePostalCodeCheck = () => {
+    if (postalCode === "606702" || postalCode === "606705") {
+      setShowReturnPolicy(true);
+    } else {
+      setShowReturnPolicy(false);
+    }
+  };
+
+  const handleColorChange = (color, index) => {
+    setSelectedColor(color);
+    if (product.images && product.images[index]) {
+      setSelectedImage(product.images[index]);
+    }
   };
 
   const similarProducts = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
@@ -90,7 +114,7 @@ function ProductDetails() {
                 {product.colors.map((color, idx) => (
                   <div 
                     key={idx}
-                    onClick={() => setSelectedColor(color)}
+                    onClick={() => handleColorChange(color, idx)}
                     className={`w-8 h-8 rounded-full cursor-pointer flex items-center justify-center ${selectedColor === color ? 'ring-2 ring-offset-2 ring-gray-900' : 'ring-1 ring-gray-200'}`}
                     style={{ backgroundColor: color }}
                   />
@@ -101,61 +125,86 @@ function ProductDetails() {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
-            <div className="bg-gray-100 rounded-full flex items-center justify-between px-4 py-2 w-full sm:w-32">
-              <button 
-                onClick={() => handleUpdateQuantity(cartItem ? cartItem.quantity - 1 : 1)}
-                className="text-gray-500 hover:text-gray-900 bg-white rounded-full w-8 h-8 flex items-center justify-center"
-              >
-                <Minus className="w-4 h-4" />
-              </button>
-              <span className="font-bold text-gray-900">{cartItem ? cartItem.quantity : 1}</span>
-              <button 
-                onClick={() => handleUpdateQuantity(cartItem ? cartItem.quantity + 1 : 2)}
-                className="text-gray-500 hover:text-gray-900 bg-white rounded-full w-8 h-8 flex items-center justify-center"
-                disabled={!cartItem}
-              >
-                <Plus className="w-4 h-4" />
-              </button>
-            </div>
+            {cartItem ? (
+              <div className="bg-green-50 rounded-full flex items-center justify-between px-4 py-2 w-full sm:w-32 border border-green-200">
+                <button 
+                  onClick={() => handleUpdateQuantity(cartItem.quantity - 1)}
+                  className="text-green-700 hover:text-green-900 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-sm"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <span className="font-bold text-green-900">{cartItem.quantity}</span>
+                <button 
+                  onClick={() => handleUpdateQuantity(cartItem.quantity + 1)}
+                  className="text-green-700 hover:text-green-900 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-sm"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+                <button 
+                  onClick={handleAddToCart}
+                  className="flex-1 font-bold rounded-full py-3 transition-colors border-2 border-gray-300 text-gray-900 hover:border-gray-900"
+                >
+                  Add to Cart
+                </button>
+            )}
             
             <div className="flex-1 flex gap-3">
-              <button className="flex-1 bg-[#004d40] hover:bg-[#003d33] text-white font-bold rounded-full py-3 transition-colors">
-                Buy Now
-              </button>
               <button 
-                onClick={cartItem ? null : handleAddToCart}
-                className={`flex-1 font-bold rounded-full py-3 transition-colors border-2 ${cartItem ? 'bg-green-50 border-green-500 text-green-700' : 'border-gray-300 text-gray-900 hover:border-gray-900'}`}
+                onClick={handleBuyNow}
+                className="flex-1 bg-[#004d40] hover:bg-[#003d33] text-white font-bold rounded-full py-3 transition-colors"
               >
-                {cartItem ? 'In Cart' : 'Add to Cart'}
+                Buy Now
               </button>
             </div>
             
             <div className="flex gap-2">
               <button 
                 onClick={() => setIsLiked(!isLiked)} 
-                className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50"
+                className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors"
+                title={isLiked ? "Remove from wishlist" : "Add to wishlist"}
               >
-                <Heart className={`w-5 h-5 ${isLiked ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+                <Heart className={`w-5 h-5 transition-colors ${isLiked ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
               </button>
             </div>
           </div>
 
           {/* Delivery Options */}
           <div className="space-y-4">
-            <div className="border border-gray-200 rounded-xl p-4 flex items-start gap-4">
-               <div className="mt-1"><span className="text-orange-500 font-bold px-2 py-0.5 rounded border border-orange-200 bg-orange-50 text-xs">FREE</span></div>
-               <div>
-                  <h4 className="font-bold text-gray-900">Free Delivery</h4>
-                  <p className="text-sm text-gray-500 underline cursor-pointer hover:text-gray-700">Enter your Postal code for Delivery Availability</p>
+            <div className="border border-gray-200 rounded-xl p-4 flex flex-col gap-4">
+               <div className="flex items-start gap-4">
+                 <div className="mt-1"><span className="text-orange-500 font-bold px-2 py-0.5 rounded border border-orange-200 bg-orange-50 text-xs">FREE</span></div>
+                 <div className="flex-1">
+                    <h4 className="font-bold text-gray-900">Free Delivery</h4>
+                    <p className="text-sm text-gray-500 cursor-pointer hover:text-gray-700">Enter your Postal code for Delivery Availability</p>
+                    <div className="mt-3 flex gap-2">
+                      <input 
+                        type="text" 
+                        placeholder="Postal Code" 
+                        value={postalCode}
+                        onChange={(e) => setPostalCode(e.target.value)}
+                        className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm w-32 focus:outline-none focus:border-green-500"
+                      />
+                      <button onClick={handlePostalCodeCheck} className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+                        Check
+                      </button>
+                    </div>
+                 </div>
                </div>
             </div>
-            <div className="border border-gray-200 rounded-xl p-4 flex items-start gap-4">
-               <div className="mt-1"><span className="text-orange-500 font-bold px-2 py-0.5 rounded border border-orange-200 bg-orange-50 text-xs">RETURN</span></div>
-               <div>
-                  <h4 className="font-bold text-gray-900">Return Delivery</h4>
-                  <p className="text-sm text-gray-500">Free 30days Delivery Returns. <span className="underline cursor-pointer">Details</span></p>
-               </div>
-            </div>
+            
+            {(showReturnPolicy || postalCode === "606702" || postalCode === "606705") && (
+              <div className="border border-gray-200 rounded-xl p-4 flex flex-col gap-4 bg-gray-50 transition-all">
+                 <div className="flex items-start gap-4">
+                   <div className="mt-1"><span className="text-orange-500 font-bold px-2 py-0.5 rounded border border-orange-200 bg-orange-50 text-xs">RETURN</span></div>
+                   <div>
+                      <h4 className="font-bold text-gray-900">Return Delivery</h4>
+                      <p className="text-sm text-gray-500">Free 30days Delivery Returns. <span className="underline cursor-pointer font-medium text-gray-700" onClick={() => alert("Items can be returned within 30 days of delivery. Must be unused and in original packaging.")}>Details</span></p>
+                   </div>
+                 </div>
+              </div>
+            )}
           </div>
 
         </div>
